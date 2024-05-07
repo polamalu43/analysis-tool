@@ -27,6 +27,7 @@ function printLog($value)
   return error_log($jsonData, 3, env('LOG_PATH'));
 }
 
+//出力確認用の関数
 function printPre($value): void
 {
   echo '<pre>';
@@ -83,9 +84,8 @@ function parseLogFiles(string $uploadDir): array
     }
 
     $contents = getLogContents($uploadDir. $file);
-    $results[] = formatLogContents($contents);
+    $results = [...$results, ...formatLogContents($contents)];
   }
-
 
   return $results;
 }
@@ -113,20 +113,21 @@ function formatLogContents(array $contents): array
   $results = [];
   foreach ($contents as $key => $line) {
     $parts = explode(' "', $line);
-    $filteredParts = array_filter($parts, function($part) {
-        return !empty($part);
-    });
 
-    $address = getAddressLog($filteredParts[0] ?? '');
-    $date = getDateLog($filteredParts[0] ?? '');
-    $requestLines = getRequestLines(str_replace('"', '', $filteredParts[1] ?? ''));
+    if (empty($parts[0])) {
+      continue;
+    }
+
+    $address = getAddressLog($parts[0] ?? '');
+    $date = getDateLog($parts[0] ?? '');
+    $requestLines = getRequestLines(str_replace('"', '', $parts[1] ?? ''));
     $requestMethod = $requestLines[0] ?? '';
     $requestResource = $requestLines[1] ?? '';
     $requestProtocol = $requestLines[2] ?? '';
     $requestStatus = $requestLines[3] ?? '';
     $requestSize = $requestLines[4] ?? '';
-    $targetPage = $filteredParts[2] ?? '';
-    $userAgent = $filteredParts[3] ?? '';
+    $targetPage = $parts[2] ?? '';
+    $userAgent = $parts[3] ?? '';
 
     $results[] = [
         'address' => $address,
@@ -140,8 +141,6 @@ function formatLogContents(array $contents): array
         'user_agent' => $userAgent,
     ];
   }
-
-  print_r($results);
 
   return $results;
 }
