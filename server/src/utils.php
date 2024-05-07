@@ -112,24 +112,36 @@ function formatLogContents(array $contents): array
 
   $results = [];
   foreach ($contents as $key => $line) {
+    $parts = explode(' "', $line);
+    $filteredParts = array_filter($parts, function($part) {
+        return !empty($part);
+    });
 
-    $parts = explode('"', $line);
-    $address = getAddressLog($parts[0]);
-    $date = getDateLog($parts[0]);
-    $requestMethod = getRequestMethodLog($parts[1]);
-    // printLog($requestMethod);
-    // $target_page = $method_and_target[1];
-    // $type = substr($parts[5], 1, strpos($parts[5], '"') - 1);
+    $address = getAddressLog($filteredParts[0] ?? '');
+    $date = getDateLog($filteredParts[0] ?? '');
+    $requestLines = getRequestLines(str_replace('"', '', $filteredParts[1] ?? ''));
+    $requestMethod = $requestLines[0] ?? '';
+    $requestResource = $requestLines[1] ?? '';
+    $requestProtocol = $requestLines[2] ?? '';
+    $requestStatus = $requestLines[3] ?? '';
+    $requestSize = $requestLines[4] ?? '';
+    $targetPage = $filteredParts[2] ?? '';
+    $userAgent = $filteredParts[3] ?? '';
 
-    // $results[] = [
-    //     'address' => $address,
-    //     'date' => $date,
-    //     'method' => $method,
-    //     'target_page' => $target_page,
-    //     'type' => $type
-    // ];
-
+    $results[] = [
+        'address' => $address,
+        'date' => $date,
+        'request_method' => $requestMethod,
+        'request_resource' => $requestResource,
+        'request_protocol' => $requestProtocol,
+        'request_status' => $requestStatus,
+        'request_size' => $requestSize,
+        'target_page' => $targetPage,
+        'user_agent' => $userAgent,
+    ];
   }
+
+  print_r($results);
 
   return $results;
 }
@@ -156,8 +168,8 @@ function getDateLog(string $str): string
   return $formattedDate;
 }
 
-//requestMethodを取得
-function getRequestMethodLog(string $str): string
+//リクエストラインを配列で取得
+function getRequestLines(string $str): array
 {
-  return strtok($str, ' ');
+  return explode(' ', $str);
 }
