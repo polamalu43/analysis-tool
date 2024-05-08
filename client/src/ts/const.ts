@@ -60,3 +60,18 @@ export const LOG_MESSAGE: ObjectForString = {
   requestFailed: 'リクエストに失敗しました。',
   requestError: 'エラーが発生しました。',
 }
+
+export const MONTHS = [
+  '1月',
+  '2月',
+  '3月',
+  '4月',
+  '5月',
+  '6月',
+  '7月',
+  '8月',
+  '9月',
+  '10月',
+  '11月',
+  '12月'
+];

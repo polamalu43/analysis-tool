@@ -28,7 +28,7 @@ const UploadForm: React.FC = () => {
     });
     try {
       const response = await axios.post(
-        'http://localhost/analysis-tools/server/src/import.php',
+        'http://localhost/analysis-tool/server/src/import.php',
         formData,
         {
           headers: {
@@ -46,7 +46,7 @@ const UploadForm: React.FC = () => {
   //   event.preventDefault();
   //   try {
   //     const response = await axios.post(
-  //       'http://localhost/analysis-tools/server/src/insert.php',
+  //       'http://localhost/analysis-tool/server/src/insert.php',
   //       []
   //     );
   //     console.log(response.data);
