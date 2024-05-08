@@ -122,11 +122,13 @@ function formatLogContents(array $contents): array
     $date = getDateLog($parts[0] ?? '');
     $requestLines = getRequestLines(str_replace('"', '', $parts[1] ?? ''));
     $requestMethod = $requestLines[0] ?? '';
-    $requestResource = $requestLines[1] ?? '';
+    $requestResource = $requestLines[1] === '/' || is_null($requestLines[1])
+      ? ''
+      : $requestLines[1];
     $requestProtocol = $requestLines[2] ?? '';
     $requestStatus = $requestLines[3] ?? '';
     $requestSize = $requestLines[4] ?? '';
-    $targetPage = $parts[2] ?? '';
+    $targetPage = str_replace('"', '', $parts[2] ?? '');
     $userAgent = $parts[3] ?? '';
 
     $results[] = [
@@ -171,4 +173,33 @@ function getDateLog(string $str): string
 function getRequestLines(string $str): array
 {
   return explode(' ', $str);
+}
+
+//logsテーブルにデータを挿入
+function insertLogs(PDO $dbh, array $data): void
+{
+  $sql = "INSERT INTO logs (address, date, request_method, request_resource, request_protocol, request_status, request_size, target_page, user_agent) VALUES ";
+  $values = [];
+  for ($i = 0; $i < count($data); $i++) {
+    $values[$i] = "(:address$i, :date$i, :request_method$i, :request_resource$i, :request_protocol$i, :request_status$i, :request_size$i, :target_page$i, :user_agent$i)";
+  }
+  $sql .= implode(", ", $values);
+
+  $stmt = $dbh->prepare($sql);
+  foreach ($data as $idx => $data) {
+    $stmt->bindValue(":address$idx", $data['address'], PDO::PARAM_STR);
+    $stmt->bindValue(":date$idx", $data['date'], PDO::PARAM_STR);
+    $stmt->bindValue(":request_method$idx", $data['request_method'], PDO::PARAM_STR);
+
+    $stmt->bindValue(":request_resource$idx", $data['request_resource'], PDO::PARAM_STR);
+    $stmt->bindValue(":request_protocol$idx", $data['request_protocol'], PDO::PARAM_STR);
+    $stmt->bindValue(":request_status$idx", $data['request_status'], PDO::PARAM_INT);
+    $stmt->bindValue(":request_size$idx", $data['request_size'], PDO::PARAM_INT);
+    $stmt->bindValue(":target_page$idx", $data['target_page'], PDO::PARAM_STR);
+    $stmt->bindValue(":user_agent$idx", $data['user_agent'], PDO::PARAM_STR);
+  }
+  $stmt->execute();
+
+  $stmt = null;
+  $dbh = null;
 }
