@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
@@ -6,13 +6,7 @@ import { generateUniqueKey } from '../utility';
 
 const UploadForm: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
-
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files) {
-  //     const fileList = Array.from(event.target.files);
-  //     setFiles(prevFiles => [...prevFiles, ...fileList]);
-  //   }
-  // };
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles(prevFiles => [...prevFiles, ...acceptedFiles]);
@@ -37,6 +31,12 @@ const UploadForm: React.FC = () => {
         }
       );
       console.log(response.data);
+
+      setFiles([]);
+      if (fileRef.current) {
+        fileRef.current.value = '';
+      }
+
     } catch (error) {
       console.error('Error uploading files: ', error);
     }
@@ -59,7 +59,6 @@ const UploadForm: React.FC = () => {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formFileMultiple" className="mb-3">
-          {/* <Form.Control type="file" multiple onChange={handleFileChange} /> */}
           <div
             {...getRootProps()}
             style={{
@@ -70,7 +69,7 @@ const UploadForm: React.FC = () => {
               marginTop: '20px',
             }}
           >
-            <input {...getInputProps()} />
+            <input {...getInputProps()} ref={fileRef}/>
               <p>ファイルをドロップ<br/>または<br/>クリックしてファイルを選択して下さい</p>
               <ul style={{listStyle: 'none'}}>
                 {files.map(file => (

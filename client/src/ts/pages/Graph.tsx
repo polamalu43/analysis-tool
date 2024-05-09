@@ -49,7 +49,6 @@ const options = {
   },
 };
 
-
 const Graph: React.FC = () => {
 
   return (
