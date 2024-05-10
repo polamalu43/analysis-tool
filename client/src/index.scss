@@ -7,9 +7,9 @@ $font_size_tab: 16px;
 $font_size_pc: 20px;
 
 $base_color: #FFF;
-$main_color: #FFC107;
-$accent_color: #FFF;
-$text_color: #000;
+$main_color: #e2e3e5;
+$accent_color: #000;
+$text_color: #333;
 $shadow_color: rgba(0, 0, 0, .2);
 $button_hover_color: #FF7700;
 
@@ -200,8 +200,7 @@ main {
 }
 
 h1, h2 {
-  margin-bottom: 30px !important;
-  color: $main_color !important;
+  margin-bottom: 30px;
 }
 
 h1:after, h2::after {
@@ -228,62 +227,9 @@ h1 {
   margin: 0 auto;
 }
 
-.home {
-  & .top_conteiner {
-    & .top_content {
-      width: 100%;
-      margin: 0 auto;
-
-      & .top {
-        text-align: right;
-        position: relative;
-
-        & .main_image {
-          width: 100%;
-          height: 100%;
-          max-height: 500px;
-          object-fit: cover;
-          object-position: 50% 50%;
-        }
-      }
-    }
-
-    @media screen and (min-width: $breakpoint_pc) {
-      .top_content {
-        width: 90% !important;
-      }
-    }
-  }
-
-  & .main_message {
-    margin: 40px auto 0;
-    width: 95%;
-    max-width: 1000px;
-  }
-
-  & .home_content,
-  & .contact
-  {
-    @include content_mergin_top_size();
-  }
-
-  & .home_content.first
-  {
-    margin-top: 40px !important;
-  }
-
-  & .home_content {
-    @include responsive_home_content();
-  }
-
-  & .contact {
-
-    & .contact_content{
-      margin: 0 auto 50px;
-      width: 80%;
-      max-width: 800px;
-    }
-  }
+.home, .graph {
+  width: 90%;
+  margin: 20px auto 0;
 }
 
 .scroll-animation {

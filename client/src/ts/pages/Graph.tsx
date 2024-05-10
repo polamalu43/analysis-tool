@@ -1,79 +1,13 @@
 import { useState, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
 import axios from 'axios';
+import GropupMonthY1 from '../components/organisms/graphs/GropupMonthY1';
+import { LogsGraph as Logs } from '../type';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-interface Logs {
-  groupMonths: GroupMonths[];
-}
-interface GroupMonths {
-  month: string;
-  count: number;
-}
 
 const Graph: React.FC = () => {
   const [logs, setLogs] = useState<Logs>({
     groupMonths: [],
   });
-
-  console.log(logs.groupMonths);
-
-  const data = {
-    labels: logs.groupMonths.map((groupMonth) => {
-      return groupMonth.month;
-    }),
-    datasets: [
-      {
-        label: 'アクセス数',
-        data: logs.groupMonths.map((groupMonth) => {
-          return groupMonth.count;
-        }),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: '過去1年のアクセス数 (月)',
-      },
-    },
-    scales: {
-      x: {
-        reverse: true,
-      },
-      y: {
-        max: 100,
-        min: 0,
-      },
-    }
-  };
 
   useEffect(() => {
     fetchLogs();
@@ -93,7 +27,7 @@ const Graph: React.FC = () => {
 
   return (
     <div className='graph'>
-      <Line options={options} data={data} />
+      <GropupMonthY1 groupMonths={logs.groupMonths} />
     </div>
   );
 }

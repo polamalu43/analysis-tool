@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
   $dbh = dbConnect('localhost', 'analysis-tool', 'root');
   $logs = [];
-  $logs['groupMonths'] = getGroupMonthsY1Logs($dbh);
+  $logs['today'] = getTodayLogs($dbh);
+  $logs['groupThisMonths'] = getGroupThisMonthsLogs($dbh);
 
   echo json_encode($logs);
 } catch (PDOException $e) {

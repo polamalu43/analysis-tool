@@ -30,7 +30,7 @@ function insertLogs(PDO $dbh, array $datas): void
 }
 
 //logsテーブルから月で集計したデータを取得
-function getLogsGroupMonths(PDO $dbh): array
+function getGroupMonthsY1Logs(PDO $dbh): array
 {
   $sql = 'SELECT DATE_FORMAT(date, \'%Y-%m\') as month, COUNT(DATE_FORMAT(date, \'%Y-%m\')) as count '
     .'FROM logs '
@@ -57,6 +57,47 @@ function getLogsGroupMonths(PDO $dbh): array
     ];
   }
 
+  $stmt = null;
+  $dbh = null;
+
   return $formatedGroupMonths;
 }
+
+//logsテーブルから今日のアクセス数を取得する
+function getTodayLogs(PDO $dbh): array
+{
+  $sql = 'SELECT COUNT(date) AS count '
+    .'FROM logs '
+    .'where DATE_FORMAT(date, \'%Y-%m-%d\') = CURRENT_DATE()';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $today = '';
+  $today = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $stmt = null;
+  $dbh = null;
+
+  return $today;
+}
+
+//logsテーブルから1カ月のアクセス数を取得する
+function getGroupThisMonthsLogs(PDO $dbh): array
+{
+  $sql = 'SELECT DATE_FORMAT(date, \'%Y-%m-%d\') as format_date, '
+    .'COUNT(DATE_FORMAT(date, \'%Y-%m-%d\')) as count '
+    .'FROM logs '
+    .'WHERE DATE_FORMAT(date, \'%Y-%m\') = DATE_FORMAT(CURRENT_DATE(), \'%Y-%m\') '
+    .'GROUP BY format_date '
+    .'ORDER BY format_date';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $groupThisMonths = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $stmt = null;
+  $dbh = null;
+
+  return $groupThisMonths;
+}
+
+
 ?>
