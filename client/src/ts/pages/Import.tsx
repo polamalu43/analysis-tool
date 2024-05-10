@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
 import { generateUniqueKey } from '../utility';
 
-const UploadForm: React.FC = () => {
+const Import: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -20,6 +20,7 @@ const UploadForm: React.FC = () => {
     files.forEach(file => {
       formData.append('files[]', file);
     });
+
     try {
       const response = await axios.post(
         'http://localhost/analysis-tool/server/src/import.php',
@@ -94,4 +95,4 @@ const UploadForm: React.FC = () => {
   );
 };
 
-export default UploadForm;
+export default Import;

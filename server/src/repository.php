@@ -1,4 +1,6 @@
 <?php
+use Carbon\Carbon;
+
 //logsテーブルにデータを挿入
 function insertLogs(PDO $dbh, array $datas): void
 {
@@ -37,7 +39,24 @@ function getLogsGroupMonths(PDO $dbh): array
     .'ORDER BY month';
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
+  $groupMonths = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $latestDate = $groupMonths[count($groupMonths)-1]['month'];
 
-  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $formatedGroupMonths = [];
+  for ($i=0; $i < 12; $i++) {
+    $dt = Carbon::parse($latestDate);
+    $month = $dt->subMonths($i)->format('Y年m月');
+    $monthkey = array_search(
+      $dt->format('Y-m'),
+      array_column($groupMonths, 'month')
+    );
+
+    $formatedGroupMonths[] = [
+      'month' => $month,
+      'count' => $monthkey !== false ? $groupMonths[$monthkey]['count'] : null,
+    ];
+  }
+
+  return $formatedGroupMonths;
 }
 ?>
