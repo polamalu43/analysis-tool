@@ -104,7 +104,7 @@ function getGroupThisMonthsLogs(PDO $dbh): array
   $formatedGroupThisMonths = [];
   for ($i=1; $i <= $daysInMonth; $i++) {
     $date = Carbon::createFromDate($year, $month, $i);
-    $formatDate = $date->format('Y-m-d');
+    $formatDate = $date->format('Y年m月d日');
 
     $datekey = array_search(
       $formatDate,

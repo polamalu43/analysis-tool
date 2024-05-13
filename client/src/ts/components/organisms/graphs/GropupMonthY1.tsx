@@ -61,7 +61,7 @@ const GropupMonthY1: React.FC<Props> = ({ groupMonths }) => {
 
   return (
     <>
-      <Line options={options} data={data} />
+      <Line options={options} data={data} style={{margin: '20px 0'}}/>
     </>
   );
 }

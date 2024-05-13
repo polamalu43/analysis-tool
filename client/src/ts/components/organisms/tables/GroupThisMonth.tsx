@@ -13,14 +13,14 @@ const GropuThisMonth: React.FC<Props> = ({ groupThisMonths }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>日付</th>
+            <th style={{width: '200px'}}>日付</th>
             <th>アクセス数</th>
           </tr>
         </thead>
         <tbody>
           {groupThisMonths.map((groupThisMonth) => (
             <tr key={generateUniqueKey()}>
-              <td>{groupThisMonth.format_date}</td>
+              <td style={{width: '200px'}}>{groupThisMonth.format_date}</td>
               <td>{groupThisMonth.count}</td>
             </tr>
           ))}
