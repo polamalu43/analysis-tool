@@ -1,5 +1,6 @@
 import Table from 'react-bootstrap/Table';
 import { GroupThisMonths } from '../../../type';
+import { generateUniqueKey } from '../../../utility';
 
 type Props = {
   groupThisMonths: GroupThisMonths[];
@@ -17,14 +18,12 @@ const GropuThisMonth: React.FC<Props> = ({ groupThisMonths }) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-          </tr>
-          <tr>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
+          {groupThisMonths.map((groupThisMonth) => (
+            <tr key={generateUniqueKey()}>
+              <td>{groupThisMonth.format_date}</td>
+              <td>{groupThisMonth.count}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </>

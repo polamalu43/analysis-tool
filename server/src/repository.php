@@ -93,10 +93,31 @@ function getGroupThisMonthsLogs(PDO $dbh): array
   $stmt->execute();
   $groupThisMonths = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+  $now = Carbon::now('Asia/Tokyo');
+  $daysInMonth = $now->daysInMonth;
+  $year = $now->year;
+  $month = $now->month;
+
+  $formatedGroupThisMonths = [];
+  for ($i=1; $i <= $daysInMonth; $i++) {
+    $date = Carbon::createFromDate($year, $month, $i);
+    $formatDate = $date->format('Y-m-d');
+
+    $datekey = array_search(
+      $formatDate,
+      array_column($groupThisMonths, 'format_date')
+    );
+
+    $formatedGroupThisMonths[] = [
+      'format_date' => $formatDate,
+      'count' => $datekey !== false ? $groupThisMonths[$datekey]['count'] : '-',
+    ];
+  }
+
   $stmt = null;
   $dbh = null;
 
-  return $groupThisMonths;
+  return $formatedGroupThisMonths;
 }
 
 

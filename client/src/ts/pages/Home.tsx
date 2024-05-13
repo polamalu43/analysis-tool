@@ -28,6 +28,7 @@ const Home: React.FC = () => {
   return (
     <div className='home'>
       <h2>今日のアクセス数: {logs.today?.count}</h2>
+      <h2>今月のアクセス数（日別）</h2>
       <GroupThisMonth  groupThisMonths={logs.groupThisMonths} />
     </div>
   );

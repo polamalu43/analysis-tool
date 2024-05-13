@@ -17,6 +17,6 @@ export interface Today {
 }
 
 export interface GroupThisMonths {
-  date: string;
+  format_date: string;
   count: number;
 }
