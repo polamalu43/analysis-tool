@@ -6,7 +6,10 @@ import { LogsGraph as Logs } from '../type';
 
 const Graph: React.FC = () => {
   const [logs, setLogs] = useState<Logs>({
-    groupMonths: [],
+    groupMonths: {
+      datas: [],
+      maxCount: 0
+    },
   });
 
   useEffect(() => {

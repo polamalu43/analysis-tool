@@ -29,7 +29,7 @@ function insertLogs(PDO $dbh, array $datas): void
   $dbh = null;
 }
 
-//logsテーブルから月で集計したデータを取得
+//logsテーブルから月で集計したデータを12カ月分取得
 function getGroupMonthsY1Logs(PDO $dbh): array
 {
   $sql = 'SELECT DATE_FORMAT(date, \'%Y-%m\') as month, COUNT(DATE_FORMAT(date, \'%Y-%m\')) as count '
@@ -43,7 +43,7 @@ function getGroupMonthsY1Logs(PDO $dbh): array
   $latestDate = $groupMonths[count($groupMonths)-1]['month'];
 
   $formatedGroupMonths = [];
-  for ($i=0; $i < 12; $i++) {
+  for ($i = 11; $i >= 0; $i--) {
     $dt = Carbon::parse($latestDate);
     $month = $dt->subMonths($i)->format('Y年m月');
     $monthkey = array_search(
@@ -60,7 +60,10 @@ function getGroupMonthsY1Logs(PDO $dbh): array
   $stmt = null;
   $dbh = null;
 
-  return $formatedGroupMonths;
+  return [
+    'datas' => $formatedGroupMonths,
+    'maxCount' => getMaxCount($groupMonths),
+  ];
 }
 
 //logsテーブルから今日のアクセス数を取得する
@@ -80,7 +83,7 @@ function getTodayLogs(PDO $dbh): array
   return $today;
 }
 
-//logsテーブルから1カ月のアクセス数を取得する
+//logsテーブルから1カ月のアクセス数を取得する(日別)
 function getGroupThisMonthsLogs(PDO $dbh): array
 {
   $sql = 'SELECT DATE_FORMAT(date, \'%Y-%m-%d\') as format_date, '
@@ -120,5 +123,16 @@ function getGroupThisMonthsLogs(PDO $dbh): array
   return $formatedGroupThisMonths;
 }
 
+//配列内のcountの最大値を取得する
+function getMaxCount(array $datas): int
+{
+  $maxCount = 0;
+  foreach ($datas as $data) {
+    if ($data['count'] > $maxCount) {
+      $maxCount = ceil($data['count'] / 50) * 50;
+    }
+  }
 
+  return $maxCount;
+}
 ?>

@@ -4,12 +4,15 @@ export interface LogsHome {
 }
 
 export interface LogsGraph {
-  groupMonths: GroupMonths[];
+  groupMonths: GroupMonths;
 }
 
 export interface GroupMonths {
-  month: string;
-  count: number;
+  datas: {
+    month: string | null;
+    count: number | null;
+  }[];
+  maxCount: number;
 }
 
 export interface Today {

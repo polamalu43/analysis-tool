@@ -22,20 +22,18 @@ ChartJS.register(
 );
 
 type Props = {
-  groupMonths: GroupMonths[];
+  groupMonths: GroupMonths;
 }
 
 const GropupMonthY1: React.FC<Props> = ({ groupMonths }) => {
+  const { datas, maxCount } = groupMonths;
+
   const data = {
-    labels: groupMonths.map((groupMonth) => {
-      return groupMonth.month;
-    }),
+    labels: datas.map((data) => data.month),
     datasets: [
       {
         label: 'アクセス数',
-        data: groupMonths.map((groupMonth) => {
-          return groupMonth.count;
-        }),
+        data: datas.map((data) => data.count),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
@@ -54,11 +52,8 @@ const GropupMonthY1: React.FC<Props> = ({ groupMonths }) => {
       },
     },
     scales: {
-      x: {
-        reverse: true,
-      },
       y: {
-        max: 200,
+        max: maxCount,
         min: 0,
       },
     }
